@@ -26,3 +26,15 @@
 *.exe
 *.out
 *.app
+
+*~
+*CMakeCache.txt
+*cmake_install.cmake
+CMakeFiles/
+*Makefile
+install/
+
+
+externals/sfml/
+externals/gtest/
+
