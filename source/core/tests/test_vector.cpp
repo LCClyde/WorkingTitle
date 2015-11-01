@@ -2,7 +2,7 @@
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 Clyde Stanfield
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
  * deal in the Software without restriction, including without limitation the
@@ -21,51 +21,12 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#ifndef CORE_VECTOR_H_
-#define CORE_VECTOR_H_
+#include <gtest/gtest.h>
+#include <core/vector_2.h>
 
-namespace core
-{
-template <typename TypeT, size_t SizeT>
-struct VectorN
-{
-public:
-    operator 
-protected:
-    std::array<TypeT, SizeT> data_;
-};
+TEST(Vector2Test, Assignment) {
+    Vector2F vector_f;
 
-template <typename T>
-struct Vector2 : public VectorN<T, 2>
-{
-public:
-    Vector2() :
-        x(data_[0]),
-        y(data_[1])
-    {
-    }
-    
-    Vector2(const T& x, const T& y) :
-        x(data_[0]),
-        y(data_[1])
-    {
-        this->x = x;
-        this->y = y;
-    }
-    
-    template <typename ThirdPartyT>
-    Vector2(const ThirdPartyT& vector)
-        x(data_[0]),
-        y(data_[1])
-    {
-        x = vector.x;
-        y = vector.y;
-    }
-    
-    T& x;
-    T& y;
-};
+    EXPECT_EQ(vector_f, 0.0f);
+    EXPECT_EQ(vector_f, 0.0f);
 }
-
-#endif
-
