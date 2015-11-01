@@ -2,7 +2,7 @@
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 Clyde Stanfield
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
  * deal in the Software without restriction, including without limitation the
@@ -21,15 +21,43 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#ifndef OS_WINDOW_H_
-#define OS_WINDOW_H_
+#ifndef WINDOW_WINDOW_SFML_H_
+#define WINDOW_WINDOW_SFML_H_
 
-namespace os
-{
-class Window
-{
+#include <string>
+#include <core/vector_2.h>
+
+namespace window {
+class WindowSFML {
 public:
-    
+    WindowSFML(const std::string& title,
+               const core::Vector2U& size,
+               const core::Vector2I& position,
+               bool fullscreen);
+
+    void update();
+
+    std::string getTitle() const;
+
+    void setTitle(const std::string& title);
+
+    core::Vector2U getSize() const;
+
+    void setSize(const core::Vector2U& size);
+
+    core::Vector2I getPosition() const;
+
+    void setPosition(const core::Vector2I& position);
+
+    bool isClosed() const;
+
+    void close();
+
+    bool getFullscreen() const;
+
+    void setFullscreen(bool fullscreen);
+
+    void* getHandle() const;
 };
 }
 

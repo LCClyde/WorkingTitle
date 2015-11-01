@@ -35,7 +35,7 @@ set(TEST_MAIN ${EXTERNALS_DIRECTORY}/gtest/src/gtest/googletest/src/gtest_main.c
 
 add_subdirectory(${EXTERNALS_DIRECTORY})
 include_directories(include ${INCLUDE_DIRECTORY})
-find_library(GTEST NAMES gtest gtest_main)
+find_library(GTEST NAMES gtest gtest_main PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 find_package(Threads)
 
 file(GLOB modules RELATIVE ${SOURCE_DIRECTORY} ${SOURCE_DIRECTORY}/*)
@@ -49,13 +49,13 @@ foreach(dir ${modules})
         endif()
 
         # Add all include directories
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/tests)
-        if(IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir}/tests)
-            file(GLOB tests RELATIVE ${SOURCE_DIRECTORY}/${dir}/tests ${SOURCE_DIRECTORY}/${dir}/tests/*.cpp)
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/unittests)
+        if(IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir}/unittests)
+            file(GLOB tests RELATIVE ${SOURCE_DIRECTORY}/${dir}/unittests ${SOURCE_DIRECTORY}/${dir}/unittests/*.cpp)
             foreach(test ${tests})
                 string(REGEX REPLACE "\\.[^.]*$" "" TEST_APP ${test})
-                #add_executable(${TEST_APP} ${SOURCE_DIRECTORY}/${dir}/tests/${test} ${TEST_MAIN})
-                #target_link_libraries(${TEST_APP} ${GTEST} ${CMAKE_THREAD_LIBS_INIT})
+                add_executable(${TEST_APP} ${SOURCE_DIRECTORY}/${dir}/unittests/${test} ${TEST_MAIN})
+                target_link_libraries(${TEST_APP} ${GTEST} ${CMAKE_THREAD_LIBS_INIT})
             endforeach()
         endif()
     endif()

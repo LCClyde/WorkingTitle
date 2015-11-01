@@ -24,11 +24,11 @@
 #ifndef CORE_VECTOR_2_H_
 #define CORE_VECTOR_2_H_
 
-#include <core/vector_n.h>
+#include <core/VectorN.h>
 #include <stdint.h>
 
-namespace core {
-
+namespace core
+{
 /*
  *  \class Vector2
  *  \brief A two dimensional vector. This can be used for 2D position or scale.
@@ -37,15 +37,17 @@ namespace core {
  *  \tparam TypeT The data type for elements.
  */
 template <typename TypeT>
-class Vector2 : public VectorN<TypeT, 2> {
+class Vector2 : public VectorN<TypeT, 2>
+{
 public:
     /*
      *  \fn Constructor
      *  \brief Default constructor
      */
     Vector2() :
-        x(data_[0]),
-        y(data_[1]) {
+        x(this->mData[0]),
+        y(this->mData[1])
+    {
     }
 
     /*
@@ -56,8 +58,9 @@ public:
      *  \param y The starting y value.
      */
     Vector2(const TypeT& x, const TypeT& y) :
-        x(data_[0]),
-        y(data_[1]) {
+        x(this->mData[0]),
+        y(this->mData[1])
+    {
         this->x = x;
         this->y = y;
     }
@@ -73,8 +76,9 @@ public:
      */
     template <typename VectorT>
     Vector2(const VectorT& vector) :
-        x(data_[0]),
-        y(data_[1]) {
+        x(this->mData[0]),
+        y(this->mData[1])
+    {
         x = static_cast<TypeT>(vector.x);
         y = static_cast<TypeT>(vector.y);
     }
@@ -88,7 +92,8 @@ public:
      *  \return An instance of the 3rd party vector that acts a copy of this.
      */
     template <typename ThirdPartyT>
-    ToThirdParty() const {
+    ThirdPartyT ToThirdParty() const
+    {
         ThirdPartyT ret;
         ret.x = x;
         ret.y = y;
@@ -108,9 +113,9 @@ public:
     TypeT& y;
 };
 
-typedef Vector2F Vector2<float>;
-typedef Vector2I Vector2<int32_t>;
-typedef Vector2U Vector2<uint32_t>;
+typedef Vector2<float> Vector2F;
+typedef Vector2<int32_t> Vector2I;
+typedef Vector2<uint32_t> Vector2U;
 
 }
 

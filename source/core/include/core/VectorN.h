@@ -24,10 +24,10 @@
 #ifndef CORE_VECTOR_N_H_
 #define CORE_VECTOR_N_H_
 
-#include <algorithm.h>
+#include <algorithm>
 
-namespace core {
-
+namespace core
+{
 /*
  *  \class VectorN
  *  \brief A generic mathematical vector of any size and any type. Specialized
@@ -39,9 +39,24 @@ namespace core {
  *  \tparam SizeT The size of the vector.
  */
 template <typename TypeT, size_t SizeT>
-class VectorN {
+class VectorN
+{
 public:
-    ~VectorN() {
+    /*
+     *  \fn Constructor
+     *  \brief Standard default constructor.
+     */
+    VectorN()
+    {
+        std::fill(mData.begin(), mData.end(), 0);
+    }
+
+    /*
+     *  \fn Destructor
+     *  \brief No purpose. This is here for inheritance.
+     */
+    virtual ~VectorN()
+    {
     }
 
     /*
@@ -53,8 +68,9 @@ public:
      *         original value.
      *  \return The new assigned vector.
      */
-    VectorN<TypeT, SizeT>& operator=(VectorN<TypeT, SizeT> other) {
-        std::swap(data_, other.data_);
+    VectorN<TypeT, SizeT>& operator=(VectorN<TypeT, SizeT> other)
+    {
+        std::swap(mData, other.mData);
         return *this;
     }
 
@@ -65,8 +81,9 @@ public:
      *  \param other The vector to check against.
      *  \return True if the vectors are equal.
      */
-    bool operator==(const VectorN<TypeT, SizeT>& other) const {
-        return std::equal(data_.begin(), data_.end(), other.data_.begin());
+    bool operator==(const VectorN<TypeT, SizeT>& other) const
+    {
+        return std::equal(mData.begin(), mData.end(), other.mData.begin());
     }
 
     /*
@@ -76,7 +93,8 @@ public:
      *  \param other The vector to check against.
      *  \return True if the vectors are not equal.
      */
-    bool operator!=(const VectorN<TypeT, SizeT>& other) const {
+    bool operator!=(const VectorN<TypeT, SizeT>& other) const
+    {
         return !(*this == other);
     }
 
@@ -88,8 +106,9 @@ public:
      *  \return A reference to the element.
      *  \throw If the index is out range
      */
-    TypeT& operator[](size_t index) {
-        return data_[index];
+    TypeT& operator[](size_t index)
+    {
+        return mData[index];
     }
 
     /*
@@ -100,8 +119,9 @@ public:
      *  \return A const reference to the element.
      *  \throw If the index is out range
      */
-    const TypeT& operator[](size_t index) const {
-        return data_[index];
+    const TypeT& operator[](size_t index) const
+    {
+        return mData[index];
     }
 
     /*
@@ -111,9 +131,11 @@ public:
      *  \param other The vector to add.
      *  \return The original vector with the other vector added to it.
      */
-    VectorN<TypeT, SizeT>& operator+=(const VectorN<TypeT, SizeT>& other) {
-        for (size_t ii = 0; ii < SizeT; ++ii) {
-            data_[ii] += other.[ii];
+    VectorN<TypeT, SizeT>& operator+=(const VectorN<TypeT, SizeT>& other)
+    {
+        for (size_t ii = 0; ii < SizeT; ++ii)
+        {
+            mData[ii] += other[ii];
         }
         return *this;
     }
@@ -125,9 +147,11 @@ public:
      *  \param other The vector to subtract.
      *  \return The original vector with the other vector subtracted from it.
      */
-    VectorN<TypeT, SizeT>& operator-=(const VectorN<TypeT, SizeT>& other) {
-        for (size_t ii = 0; ii < SizeT; ++ii) {
-            data_[ii] -= other[ii];
+    VectorN<TypeT, SizeT>& operator-=(const VectorN<TypeT, SizeT>& other)
+    {
+        for (size_t ii = 0; ii < SizeT; ++ii)
+        {
+            mData[ii] -= other[ii];
         }
         return *this;
     }
@@ -136,15 +160,14 @@ public:
      *  \fn Addition Assignment Operator
      *  \brief Adds a passed in value to each element in the vector.
      *
-     *  \tparam ScalarT The scalar type. This will usually be a plain
-     *          data type.
      *  \param value The value to add.
      *  \return The original vector with the value added to it.
      */
-    template <typename ScalarT>
-    VectorN<TypeT, SizeT>& operator+=(const ScalarT& value) {
-        for (size_t ii = 0; ii < SizeT; ++ii) {
-            data_[ii] += value;
+    VectorN<TypeT, SizeT>& operator+=(double value)
+    {
+        for (size_t ii = 0; ii < SizeT; ++ii)
+        {
+            mData[ii] += static_cast<TypeT>(value);
         }
     }
 
@@ -152,14 +175,11 @@ public:
      *  \fn Subtraction Assignment Operator
      *  \brief Subtracts a passed in value from each element in the vector.
      *
-     *  \tparam ScalarT The scalar type. This will usually be a plain
-     *          data type.
      *  \param value The value to subtract.
      *  \return The original vector with the value subtracted from it.
      */
-
-    template <typename ScalarT>
-    VectorN<TypeT, SizeT>& operator-=(const ScalarT& value) {
+    VectorN<TypeT, SizeT>& operator-=(double value)
+    {
         (*this) += (-value);
         return *this;
     }
@@ -168,15 +188,14 @@ public:
      *  \fn Multiplication Assignment Operator
      *  \brief Multiplies each element in the vector by a passed in value.
      *
-     *  \tparam ScalarT The scalar type. This will usually be a plain
-     *          data type.
      *  \param value The value to multiply by.
      *  \return The original vector with the value multiplied by it.
      */
-    template <typename ScalarT>
-    VectorN<TypeT, SizeT>& operator*=(const ScalarT& value) {
-        for (size_t ii = 0; ii < SizeT; ++ii) {
-            data_[ii] *= value;
+    VectorN<TypeT, SizeT>& operator*=(double value)
+    {
+        for (size_t ii = 0; ii < SizeT; ++ii)
+        {
+            mData[ii] *= value;
         }
         return *this;
     }
@@ -185,14 +204,12 @@ public:
      *  \fn Division Assignment Operator
      *  \brief Divides each element in a vector by a passed in value.
      *
-     *  \tparam ScalarT The scalar type. This will usually be a plain
-     *          data type.
      *  \param value The value to divide by.
      *  \return The original vector divided by the value.
      */
-    template <typename ScalarT>
-    VectorN<TypeT, SizeT>& operator/=(const ScalarT& value) {
-        (*this) /= (1.0 / value);
+    VectorN<TypeT, SizeT>& operator/=(double value)
+    {
+        (*this) *= (1.0 / value);
         return *this;
     }
 
@@ -205,7 +222,8 @@ public:
      *         anyways.
      *  \return A new vector which is both vectors added together.
      */
-    VectorN<TypeT, SizeT> operator+(VectorN<TypeT, SizeT> other) const {
+    VectorN<TypeT, SizeT> operator+(VectorN<TypeT, SizeT> other) const
+    {
         other += (*this);
         return other;
     }
@@ -219,7 +237,8 @@ public:
      *         anyways.
      *  \return A new vector which is the difference between the vectors.
      */
-    VectorN<TypeT, SizeT> operator-(VectorN<TypeT, SizeT> other) const {
+    VectorN<TypeT, SizeT> operator-(VectorN<TypeT, SizeT> other) const
+    {
         other -= (*this);
         return other;
     }
@@ -228,13 +247,11 @@ public:
      *  \fn Addition Operator
      *  \brief Adds a scalar to each element of a vector.
      *
-     *  \tparam ScalarT The scalar type. This will usually be a plain
-     *          data type.
      *  \param value The value to add to each element.
      *  \return A new vector which has the value added to each element.
      */
-    template <typename ScalarT>
-    VectorN<TypeT, SizeT> operator+(const ScalarT& value) const {
+    VectorN<TypeT, SizeT> operator+(double value) const
+    {
         VectorN<TypeT, SizeT> ret(*this);
         ret += value;
         return ret;
@@ -244,13 +261,11 @@ public:
      *  \fn Subtraction Operator
      *  \brief Subtracts a scalar from each element of a vector.
      *
-     *  \tparam ScalarT The scalar type. This will usually be a plain
-     *          data type.
      *  \param value The value to subtract from each element.
      *  \return A new vector which has the value subtracted from each element.
      */
-    template <typename ScalarT>
-    VectorN<TypeT, SizeT> operator-(const ScalarT& value) const {
+    VectorN<TypeT, SizeT> operator-(double value) const
+    {
         VectorN<TypeT, SizeT> ret(*this);
         ret -= value;
         return ret;
@@ -260,13 +275,11 @@ public:
      *  \fn Multiplication Operator
      *  \brief Multiplies each element by a scalar.
      *
-     *  \tparam ScalarT The scalar type. This will usually be a plain
-     *          data type.
      *  \param value The value to multiply each element by.
      *  \return A new vector which is multiplied by the scalar.
      */
-    template <typename ScalarT>
-    VectorN<TypeT, SizeT> operator*(const ScalarT& value) const {
+    VectorN<TypeT, SizeT> operator*(double value) const
+    {
         VectorN<TypeT, SizeT> ret(*this);
         ret *= value;
         return ret;
@@ -276,48 +289,49 @@ public:
      *  \fn Division Operator
      *  \brief Divides each element by a scalar.
      *
-     *  \tparam ScalarT The scalar type. This will usually be a plain
-     *          data type.
      *  \param value The value to divide each element by.
      *  \return A new vector which is divided by the scalar.
      */
-    template <typename ScalarT>
-    VectorN<TypeT, SizeT> operator/(const ScalarT& value) const {
+    VectorN<TypeT, SizeT> operator/(double value) const
+    {
         VectorN<TypeT, SizeT> ret(*this);
         ret /= value;
         return ret;
     }
 
     /*
-     *  \fn Sum
+     *  \fn sum
      *  \brief Adds all elements in a vector together into one value.
      *
      *  \return The sum of all the elements.
      */
-    TypeT Sum() const {
-        return std::accumulate(data_.begin(), data_.end(), 0);
+    TypeT sum() const
+    {
+        return std::accumulate(mData.begin(), mData.end(), 0.0);
     }
 
     /*
-     *  \fn Product
+     *  \fn product
      *  \brief Multiples all the elements in a vector together.
      *
      *  \return The product of all the elements.
      */
-    TypeT Product() const {
+    TypeT product() const
+    {
         return std::accumulate(
-                v.begin(), v.end(), 1, std::multiplies<TypeT>());
+                mData.begin(), mData.end(), 1, std::multiplies<TypeT>());
     }
 
     /*
-     *  \fn SumSquares
+     *  \fn sumSquares
      *  \brief Adds the squares of all the elements together.
      *
      *  \return The sum of all the squares of the elements.
      */
-    TypeT SumSquares() const {
+    TypeT sumSquares() const
+    {
         return std::inner_product(
-                data_.begin(), data_.end(), data_.begin(), 0);
+                mData.begin(), mData.end(), mData.begin(), 0.0);
     }
 
     /*
@@ -328,8 +342,9 @@ public:
      *
      *  \return The length of the vector.
      */
-    double Length() const {
-        return std::sqrt(SumSquares());
+    double length() const
+    {
+        return std::sqrt(static_cast<double>(sumSquares()));
     }
 
     /*
@@ -340,21 +355,52 @@ public:
      *
      *  \return The length of the vector squared.
      */
-    double LengthSquared() const {
-        return SumSquares();
+    double lengthSquared() const
+    {
+        return sumSquares();
     }
 
     /*
      *  \fn Normalize
      *  \brief Normalizes a vector so it has a length of 1.
      */
-    void Normalize() {
-        (*this) /= Length();
+    void normalize()
+    {
+        (*this) /= length();
     }
 
 protected:
-    std::array<TypeT, SizeT> data_;
+    std::array<TypeT, SizeT> mData;
 };
+
+/*
+ *  \fn Stream Out Operator
+ *  \brief Prints the values of a vector.
+ *
+ *  \tparam TypeT The data type of elements in the vector.
+ *  \tparam SizeT The size of the vector.
+ *  \param os The current stream.
+ *  \param vector The vector to print.
+ *  \return The updated stream object.
+ */
+template <typename TypeT, size_t SizeT>
+std::ostream& operator<<(std::ostream& os,
+                         const VectorN<TypeT, SizeT>& vector)
+{
+    if (SizeT < 1)
+    {
+        return os;
+    }
+
+    os << "{ ";
+    for (size_t ii = 0; ii < SizeT - 1; ++ii)
+    {
+        os << vector[ii] << ", ";
+    }
+    os << vector[SizeT - 1] << " }";
+    return os;
+}
+
 }
 
 #endif
