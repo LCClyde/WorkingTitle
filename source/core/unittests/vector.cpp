@@ -156,7 +156,7 @@ TEST(Vector2Test, Calculations)
 TEST(Vector2Test, 3rdParty)
 {
     const core::Vector2F vec(10.25f, 20.67f);
-    ThirdParty thirdParty(vec.ToThirdParty<ThirdParty>());
+    ThirdParty thirdParty(vec.toThirdParty<ThirdParty>());
     EXPECT_EQ(thirdParty.x, vec.x);
     EXPECT_EQ(thirdParty.y, vec.y);
 }

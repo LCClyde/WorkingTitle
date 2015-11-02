@@ -21,48 +21,36 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#ifndef WINDOW_WINDOW_SFML_H_
-#define WINDOW_WINDOW_SFML_H_
+#ifndef WINDOW_WINDOW_INTERFACE_H_
+#define WINDOW_WINDOW_INTERFACE_H_
 
-#include <window/WindowInterface.h>
-#include <SFML/Window.hpp>
+#include <string>
+#include <core/Types.h>
+#include <core/Vector2.h>
 
 namespace window
 {
 /*
- *  \class WindowSFML
- *  \brief Represents the
+ *  \class WindowInterface
+ *  \brief Represents the expected class for a Window object. All Window
+ *         objects should inherit from this class.
  */
-class WindowSFML : public WindowInterface
+class WindowInterface
 {
 public:
     /*
-     *  \fn Constructor
-     *  \brief Creates an opens a SFML window.
-     *
-     *  \param title The title of the window.
-     *  \param size The desired size of the window. This should represent
-     *         the client size and not the actual size.
-     *  \param position The desired postition of the window.
-     *  \param fullscreen Should the window be fullscreen? If it is then
-     *         size and position will ignored.
-     */
-    WindowSFML(const std::string& title,
-               const core::Vector2U& size,
-               const core::Vector2I& position,
-               bool fullscreen);
-
-    /*
      *  \fn Destructor
-     *  \brief Closes the window when it goes out of scope.
+     *  \brief Included for proper inheritance.
      */
-    ~WindowSFML();
+    virtual ~WindowInterface();
 
     /*
      *  \fn update
-     *  \brief Polls the operator system messages.
+     *  \brief Handles all operator system level messages. In general this
+     *         should not be concerned with input. A seperate input module
+     *         should handle this.
      */
-    void update() override;
+    virtual void update() = 0;
 
     /*
      *  \fn getTitle
@@ -70,7 +58,7 @@ public:
      *
      *  \return The current title.
      */
-    std::string getTitle() const override;
+    virtual std::string getTitle() const = 0;
 
     /*
      *  \fn setTitle
@@ -78,7 +66,7 @@ public:
      *
      *  \param title The desired title.
      */
-    void setTitle(const std::string& title) override;
+    virtual void setTitle(const std::string& title) = 0;
 
     /*
      *  \fn getSize
@@ -87,7 +75,7 @@ public:
      *
      *  \return The current window size.
      */
-    core::Vector2U getSize() const override;
+    virtual core::Vector2U getSize() const = 0;
 
     /*
      *  \fn setSize
@@ -96,7 +84,7 @@ public:
      *
      *  \iparam The desired window size.
      */
-    void setSize(const core::Vector2U& size) override;
+    virtual void setSize(const core::Vector2U& size) = 0;
 
     /*
      *  \fn getPosition
@@ -105,7 +93,7 @@ public:
      *
      *  \return The current window position.
      */
-    core::Vector2I getPosition() const override;
+    virtual core::Vector2I getPosition() const = 0;
 
     /*
      *  \fn setPosition
@@ -114,7 +102,7 @@ public:
      *
      *  \param The desired window position.
      */
-    void setPosition(const core::Vector2I& position) override;
+    virtual void setPosition(const core::Vector2I& position) = 0;
 
     /*
      *  \fn isOpen
@@ -123,7 +111,7 @@ public:
      *
      *  \return True if the window is still open.
      */
-    bool isOpen() const override;
+    virtual bool isOpen() const = 0;
 
     /*
      *  \fn getFullscreen
@@ -131,7 +119,7 @@ public:
      *
      *  \return True if the window is in fullscreen mode.
      */
-    bool getFullscreen() const override;
+    virtual bool getFullscreen() const = 0;
 
     /*
      *  \fn setFullscreen
@@ -139,7 +127,7 @@ public:
      *
      *  \param fullscreen The desired fullscreen setting.
      */
-    void setFullscreen(bool fullscreen) override;
+    virtual void setFullscreen(bool fullscreen) = 0;
 
     /*
      *  \fn getHandle
@@ -149,12 +137,7 @@ public:
      *
      *  \return The platform specific handle or NULL if the window is closed.
      */
-    core::WindowsHandle getHandle() const override;
-
-private:
-    sf::Window mWindow;
-    std::string mTitle;
-    bool mFullscreen;
+    virtual core::WindowsHandle getHandle() const = 0;
 };
 }
 

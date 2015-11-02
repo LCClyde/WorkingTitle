@@ -36,31 +36,62 @@ set(TEST_MAIN ${EXTERNALS_DIRECTORY}/gtest/src/gtest/googletest/src/gtest_main.c
 add_subdirectory(${EXTERNALS_DIRECTORY})
 include_directories(include ${INCLUDE_DIRECTORY})
 find_library(GTEST NAMES gtest gtest_main PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+find_library(SFML_SYSTEM NAMES sfml-system PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+find_library(SFML_WINDOW NAMES sfml-window PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+find_library(SFML_GRAPHICS NAMES sfml-graphics PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 find_package(Threads)
 
 file(GLOB modules RELATIVE ${SOURCE_DIRECTORY} ${SOURCE_DIRECTORY}/*)
 
 # Build all tests
 foreach(dir ${modules})
-    if(IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir})
-        # Add all include directories
-        if(IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir}/include)
-            include_directories(include ${SOURCE_DIRECTORY}/${dir}/include/)
+    if (IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir})
+
+        # Remove some variables
+        unset(DEPENDS)
+        unset(TEST_DEPENDS)
+        unset(CURRENT_LIB)
+
+        # Check for a custom cmake
+        if(EXISTS ${SOURCE_DIRECTORY}/${dir}/CMakeLists.txt)
+            add_subdirectory(${SOURCE_DIRECTORY}/${dir})
         endif()
 
         # Add all include directories
+        if (IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir}/include)
+            include_directories(include ${SOURCE_DIRECTORY}/${dir}/include/)
+        endif()
+
+        # library
+        if (IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir}/source)
+            file(GLOB SOURCES ${SOURCE_DIRECTORY}/${dir}/source/*.cpp)
+            set(CURRENT_LIB ${dir})
+            add_library(${CURRENT_LIB} ${SOURCES})
+            target_link_libraries(${CURRENT_LIB} ${DEPENDS})
+        endif()
+
+        # Build tests
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)
+        if (IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir}/tests)
+            file(GLOB tests RELATIVE ${SOURCE_DIRECTORY}/${dir}/tests ${SOURCE_DIRECTORY}/${dir}/tests/*.cpp)
+            foreach(test ${tests})
+                string(REGEX REPLACE "\\.[^.]*$" "" TEST_APP ${test})
+                set(TEST_APP test_${TEST_APP})
+                add_executable(${TEST_APP} ${SOURCE_DIRECTORY}/${dir}/tests/${test})
+                target_link_libraries(${TEST_APP} ${CURRENT_LIB})
+            endforeach()
+        endif()
+
+        # Build unittests
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/unittests)
-        if(IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir}/unittests)
+        if (IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir}/unittests)
             file(GLOB tests RELATIVE ${SOURCE_DIRECTORY}/${dir}/unittests ${SOURCE_DIRECTORY}/${dir}/unittests/*.cpp)
             foreach(test ${tests})
                 string(REGEX REPLACE "\\.[^.]*$" "" TEST_APP ${test})
+                set(TEST_APP unittest_${TEST_APP})
                 add_executable(${TEST_APP} ${SOURCE_DIRECTORY}/${dir}/unittests/${test} ${TEST_MAIN})
-                target_link_libraries(${TEST_APP} ${GTEST} ${CMAKE_THREAD_LIBS_INIT})
+                target_link_libraries(${TEST_APP} ${CURRENT_LIB} ${GTEST} ${CMAKE_THREAD_LIBS_INIT})
             endforeach()
         endif()
     endif()
 endforeach()
-
-#file(GLOB SOURCES source/*.cpp)
-
-#add_library(ROSIA ${SOURCES})

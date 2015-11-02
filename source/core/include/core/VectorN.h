@@ -25,6 +25,7 @@
 #define CORE_VECTOR_N_H_
 
 #include <algorithm>
+#include <ostream>
 
 namespace core
 {

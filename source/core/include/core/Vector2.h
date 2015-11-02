@@ -92,7 +92,7 @@ public:
      *  \return An instance of the 3rd party vector that acts a copy of this.
      */
     template <typename ThirdPartyT>
-    ThirdPartyT ToThirdParty() const
+    ThirdPartyT toThirdParty() const
     {
         ThirdPartyT ret;
         ret.x = x;
