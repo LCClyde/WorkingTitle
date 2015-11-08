@@ -24,18 +24,24 @@
 cmake_minimum_required(VERSION 2.8.12.2)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
+
+#TODO: Only set this if the caller did not set it
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)
+link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 set(INCLUDE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
 set(SOURCE_DIRECTORY ${CMAKE_BINARY_DIR}/source)
 set(EXTERNALS_DIRECTORY ${CMAKE_BINARY_DIR}/externals)
 set(TEST_MAIN ${EXTERNALS_DIRECTORY}/gtest/src/gtest/googletest/src/gtest_main.cc)
 
+#TODO: Hack, I should remove this
+set(CMAKE_PREFIX_PATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} {CMAKE_PREFIX_PATH})
+
 add_subdirectory(${EXTERNALS_DIRECTORY})
 include_directories(include ${INCLUDE_DIRECTORY})
-find_library(GTEST NAMES gtest gtest_main PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+find_library(GTEST NAMES gtest PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 find_library(SFML_SYSTEM NAMES sfml-system PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 find_library(SFML_WINDOW NAMES sfml-window PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 find_library(SFML_GRAPHICS NAMES sfml-graphics PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
@@ -57,6 +63,12 @@ foreach(dir ${modules})
             add_subdirectory(${SOURCE_DIRECTORY}/${dir})
         endif()
 
+        # Copy data
+        # TODO: Copy directory at build time
+        if (IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir}/data)
+            file(COPY ${SOURCE_DIRECTORY}/${dir}/data DESTINATION ${CMAKE_INSTALL_PREFIX})
+        endif()
+
         # Add all include directories
         if (IS_DIRECTORY ${SOURCE_DIRECTORY}/${dir}/include)
             include_directories(include ${SOURCE_DIRECTORY}/${dir}/include/)
@@ -67,6 +79,7 @@ foreach(dir ${modules})
             file(GLOB SOURCES ${SOURCE_DIRECTORY}/${dir}/source/*.cpp)
             set(CURRENT_LIB ${dir})
             add_library(${CURRENT_LIB} ${SOURCES})
+            add_dependencies(${CURRENT_LIB} SFML_PROJECT)
             target_link_libraries(${CURRENT_LIB} ${DEPENDS})
         endif()
 
@@ -95,3 +108,8 @@ foreach(dir ${modules})
         endif()
     endif()
 endforeach()
+
+add_custom_command(
+        TARGET post_cppcheck
+        POST_BUILD
+        COMMAND ${CMAKE_INSTALL_PREFIX}/bin/cppcheck ${SOURCE_DIR})

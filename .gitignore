@@ -37,4 +37,7 @@ install/
 
 externals/sfml/
 externals/gtest/
+externals/libpng/
+
+err.txt
 

@@ -24,13 +24,13 @@
 include(ExternalProject)
 
 ExternalProject_Add(
-        sfml
+        SFML_PROJECT
         GIT_REPOSITORY https://github.com/SFML/SFML.git
         PREFIX ${EXTERNALS_DIRECTORY}/sfml/
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX})
 
 ExternalProject_Add(
-        gtest
+        GTEST_PROJECT
         GIT_REPOSITORY https://github.com/google/googletest.git
         PREFIX ${EXTERNALS_DIRECTORY}/gtest/
         PATCH_COMMAND ${CMAKE_COMMAND} -E copy
@@ -44,5 +44,10 @@ ExternalProject_Add(
             <BINARY_DIR>/googletest/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX}
             ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX})
 
+ExternalProject_Add(
+        LIBPNG_PROJECT
+        GIT_REPOSITORY https://github.com/glennrp/libpng.git
+        PREFIX ${EXTERNALS_DIRECTORY}/libpng/
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX})
 
-
+set(EXTERNAL_PROJECTS SFML_PROJECT GTEST_PROJECT LIBPNG_PROJECT PARENT_SCOPE)
