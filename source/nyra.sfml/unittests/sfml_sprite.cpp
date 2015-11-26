@@ -31,16 +31,20 @@
 
 namespace
 {
+//===========================================================================//
 class RunTest
 {
 public:
-    RunTest() :
+    RunTest(const std::string& sprite,
+            const nyra::Vector2U& windowSize,
+            const nyra::Vector2U& frames) :
         mWindow("Test window",
-                nyra::Vector2U(400, 400),
+                windowSize,
                 nyra::Vector2I(0, 0),
                 false),
         mSprite(nyra::Constants::APP_PATH +
-                "../data/unittests/sfml-logo-small.png")
+                "../data/unittests/" + sprite,
+                frames)
     {
     }
 
@@ -50,8 +54,10 @@ public:
     }
 
     void operator()(nyra::Transform& transform,
-                    const std::string& subname)
+                    const std::string& subname,
+                    size_t frame = 0)
     {
+        mSprite.setFrame(frame);
         mWindow.update();
         mGraphics.clear(mWindow.getHandle());
         mSprite.render(transform.getMatrix(), mGraphics);
@@ -71,10 +77,13 @@ private:
 };
 }
 
+//===========================================================================//
 TEST(SpriteSFMLTest, Transforms)
 {
     // Default no transforms
-    RunTest test;
+    RunTest test("sfml-logo-small.png",
+                 nyra::Vector2U(400, 400),
+                 nyra::Vector2U(1, 1));
     nyra::Transform transform;
     transform.setSize(test.getSize());
     test(transform, "default");
@@ -103,4 +112,19 @@ TEST(SpriteSFMLTest, Transforms)
     transform.setRotation(-24.654f);
     test(transform, "complex");
 
+}
+
+//===========================================================================//
+TEST(SpriteSFMLTest, Animations)
+{
+    RunTest test("sfml_sprite_animation.png",
+                 nyra::Vector2U(64, 64),
+                 nyra::Vector2U(6, 3));
+    nyra::Transform transform;
+    transform.setSize(test.getSize());
+    transform.setPivot(0.0f, 0.0f);
+    for (size_t ii = 0; ii < 18; ++ii)
+    {
+        test(transform, "anim_" + std::to_string(ii), ii);
+    }
 }

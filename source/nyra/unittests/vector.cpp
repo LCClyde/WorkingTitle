@@ -140,8 +140,6 @@ TEST(Vector2Test, Operators)
     EXPECT_EQ(vec + vec, nyra::Vector2F(20.0f, 40.0f));
     EXPECT_EQ(vec - vec, nyra::Vector2F(0.0f, 0.0f));
     EXPECT_EQ(vec * vec, nyra::Vector2F(100.0f, 400.0f));
-    std::cout << vec << "\n";
-    std::cout << vec / nyra::Vector2F(2.0f, 4.0f) << "\n";
     EXPECT_EQ(vec / nyra::Vector2F(2.0f, 4.0f), nyra::Vector2F(5.0f, 5.0f));
     EXPECT_EQ(vec + 10.0, nyra::Vector2F(20.0f, 30.0f));
     EXPECT_EQ(vec - 10.0, nyra::Vector2F(0.0f, 10.0f));

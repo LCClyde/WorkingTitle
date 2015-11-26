@@ -39,7 +39,7 @@ set(TEST_MAIN ${EXTERNALS_DIRECTORY}/gtest/src/gtest/googletest/src/gtest_main.c
 #TODO: Hack, I should remove this
 set(CMAKE_PREFIX_PATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} {CMAKE_PREFIX_PATH})
 
-add_subdirectory(${EXTERNALS_DIRECTORY})
+#add_subdirectory(${EXTERNALS_DIRECTORY})
 include_directories(include ${INCLUDE_DIRECTORY})
 find_library(GTEST NAMES gtest PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 find_library(SFML_SYSTEM NAMES sfml-system PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})

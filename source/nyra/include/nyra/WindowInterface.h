@@ -49,8 +49,10 @@ public:
      *  \brief Handles all operator system level messages. In general this
      *         should not be concerned with input. A seperate input module
      *         should handle this.
+     *
+     *  \return False if the Window has been closed and is no longer valid.
      */
-    virtual void update() = 0;
+    virtual bool update() = 0;
 
     /*
      *  \fn getTitle

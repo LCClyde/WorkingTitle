@@ -56,14 +56,8 @@ Window::~Window()
 }
 
 //===========================================================================//
-void Window::update()
+bool Window::update()
 {
-    // Make sure the window is open
-    if (!mWindow.isOpen())
-    {
-        return;
-    }
-
     sf::Event event;
     while (mWindow.pollEvent(event))
     {
@@ -72,6 +66,8 @@ void Window::update()
             mWindow.close();
         }
     }
+
+    return mWindow.isOpen();
 }
 
 //===========================================================================//

@@ -30,13 +30,23 @@ namespace nyra
 namespace sfml
 {
 //===========================================================================//
-Sprite::Sprite(const std::string& pathname)
+Sprite::Sprite(const std::string& pathname,
+               const Vector2U& numFrames) :
+    mNumFrames(numFrames)
 {
+    // Ensure there is at least one frame in each direction
+    if (mNumFrames.product() < 1)
+    {
+        throw std::runtime_error("You must have at least one sprite frame");
+    }
+
     if (!mTexture.loadFromFile(pathname))
     {
         throw std::runtime_error("Unable to load texture: " + pathname);
     }
     mSprite.setTexture(mTexture);
+    mFrameSize = Vector2U(mTexture.getSize()) / mNumFrames;
+    setFrame(0);
 }
 
 //===========================================================================//
@@ -51,9 +61,25 @@ void Sprite::render(const Matrix& matrix,
 }
 
 //===========================================================================//
-Vector2F Sprite::getSize() const
+Vector2U Sprite::getSize() const
 {
-    return mTexture.getSize();
+    return mFrameSize;
+}
+
+//===========================================================================//
+void Sprite::setFrame(size_t index)
+{
+    if (index >= mNumFrames.product())
+    {
+        throw std::runtime_error("Frame index out of bounds");
+    }
+
+    const size_t xStart = (index % mNumFrames.x) * mFrameSize.x;
+    const size_t yStart = (index / mNumFrames.x) * mFrameSize.y;
+    mSprite.setTextureRect(sf::IntRect(xStart,
+                                       yStart,
+                                       mFrameSize.x,
+                                       mFrameSize.y));
 }
 }
 }

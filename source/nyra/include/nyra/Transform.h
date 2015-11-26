@@ -183,19 +183,6 @@ public:
         return mPivot;
     }
 
-    /*
-     *  \fn getAndResetDirty
-     *  \brief Resets the dirty flag and returns what the value was.
-     *
-     *  \return The current value of the dirty flag.
-     */
-    inline bool getAndResetDirty()
-    {
-        const bool ret = mNeedMatrixUpdate;
-        mNeedMatrixUpdate = false;
-        return ret;
-    }
-
      /*
       *  \fn getMatrix
       *  \brief Updates and returns the transforms matrix. If the matrix is
@@ -212,7 +199,7 @@ public:
       *
       *  \param size The object size.
       */
-     void setSize(const Vector2F& size)
+     void setSize(const Vector2U& size)
      {
         mSize = size * -1.0f;
         mNeedMatrixUpdate = true;
@@ -224,7 +211,7 @@ private:
     float mRotation;
     Vector2F mPivot;
     Matrix mMatrix;
-    Vector2F mSize;
+    Vector2I mSize;
     bool mNeedMatrixUpdate;
 };
 }

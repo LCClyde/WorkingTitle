@@ -61,7 +61,7 @@ public:
      *
      *  \return The size of the object.
      */
-    virtual Vector2F getSize() const = 0;
+    virtual Vector2U getSize() const = 0;
 };
 }
 #endif

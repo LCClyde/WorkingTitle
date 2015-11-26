@@ -21,34 +21,48 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#include <gtest/gtest.h>
-#include <nyra/Vector2.h>
-#include <nyra/Transform.h>
+#ifndef NYRA_ANIMATE_INTERFACE_H_
+#define NYRA_ANIMATE_INTERFACE_H_
 
-TEST(Transform, AccessorsMutators)
+namespace nyra
 {
-    nyra::Transform transform;
-    EXPECT_EQ(transform.getPosition(), nyra::Vector2F(0.0f, 0.0f));
-    EXPECT_EQ(transform.getScale(), nyra::Vector2F(1.0f, 1.0f));
-    EXPECT_EQ(transform.getRotation(), 0.0f);
-    EXPECT_EQ(transform.getPivot(), nyra::Vector2F(0.5f, 0.5f));
+/*
+ *  \enum AnimateMode
+ *  \brief Used to describe how an animation should be played:
+ *         DEFAULT - Play once
+ *         LOOP - Repeat forever
+ *         PING_PONG - Repeat and then go backwards. Repeat this forever.
+ */
+enum class AnimateMode
+{
+    PLAY_ONCE,
+    LOOP,
+    PING_PONG_ONCE,
+    PING_PONG_LOOP
+};
 
-    const nyra::Vector2F testVec(567.909f, -345.234f);
-    transform.setPosition(testVec);
-    EXPECT_EQ(transform.getPosition(), testVec);
+/*
+ *  \class AnimateInterface
+ *  \brief A base class for all animations.
+ */
+class AnimateInterface
+{
+public:
+    /*
+     *  \fn Constructor
+     *  \brief Here for proper inheritance.
+     */
+    ~AnimateInterface();
 
-    transform.setScale(testVec);
-    EXPECT_EQ(transform.getScale(), testVec);
-
-    transform.setRotation(testVec.x);
-    EXPECT_EQ(transform.getRotation(), testVec.x);
-
-    transform.setPivot(testVec);
-    EXPECT_EQ(transform.getPivot(), testVec);
+    /*
+     *  \fn update
+     *  \brief Updates the animation object.
+     *
+     *  \param deltaTime The time since the last update.
+     *  \return false if the animation is finished and should be removed.
+     */
+    virtual bool update(double deltaTime) = 0;
+};
 }
 
-TEST(Transform, Matrix)
-{
-    //TODO: Test matrix
-    std::cout << "Need to add matrix tests\n";
-}
+#endif

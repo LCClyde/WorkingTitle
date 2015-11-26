@@ -63,8 +63,10 @@ public:
     /*
      *  \fn update
      *  \brief Polls the operator system messages.
+     *
+     *  \return False if the Window has been closed and is no longer valid.
      */
-    void update() override;
+    bool update() override;
 
     /*
      *  \fn getTitle

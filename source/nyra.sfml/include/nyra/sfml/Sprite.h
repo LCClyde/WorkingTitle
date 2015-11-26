@@ -27,6 +27,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include <nyra/RenderableInterface.h>
+#include <nyra/SpriteInterface.h>
 
 namespace nyra
 {
@@ -36,7 +37,7 @@ namespace sfml
  *  \class Sprite
  *  \brief Represents a single drawable sprite.
  */
-class Sprite : public RenderableInterface
+class Sprite : public RenderableInterface, public SpriteInterface
 {
 public:
     /*
@@ -44,8 +45,10 @@ public:
      *  \brief Creates a sprite object.
      *
      *  \param pathname The pathname to the texture on disk.
+     *  \param numFrames The number of frames in the x and y direction.
      */
-    Sprite(const std::string& pathname);
+    Sprite(const std::string& pathname,
+           const Vector2U& numFrames = Vector2U(1, 1));
 
     /*
      *  \fn render
@@ -64,11 +67,21 @@ public:
      *
      *  \return The size of the object.
      */
-    Vector2F getSize() const override;
+    Vector2U getSize() const override;
+
+    /*
+     *  \fn setFrame
+     *  \brief Sets a portion of the sprite as the current frame.
+     *
+     *  \param index The frame number to use for rendering.
+     */
+    void setFrame(size_t index) override;
 
 private:
     sf::Texture mTexture;
     sf::Sprite mSprite;
+    const Vector2U mNumFrames;
+    Vector2U mFrameSize;
 };
 }
 }
