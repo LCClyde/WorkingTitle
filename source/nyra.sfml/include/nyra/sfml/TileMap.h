@@ -21,19 +21,53 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#ifndef NYRA_TILE_MAP_INTERFACE_H_
-#define NYRA_TILE_MAP_INTERFACE_H_
+#ifndef NYRA_SFML_TILE_MAP_H_
+#define NYRA_SFML_TILE_MAP_H_
 
-#include <nyra/Vector2.h>
-#include <string>
+#include <nyra/TileMapInterface.h>
+#include <nyra/RenderableInterface.h>
+#include <SFML/Graphics.hpp>
 
 namespace nyra
 {
-class TileMapInterface
+namespace sfml
 {
-public:
-    ~TileMapInterface();
+/*
+ *  TODO: This is untested.
+ */
+class TileMap : public TileMapInterface, RenderableInterface
+{
+    TileMap(const Vector2U& numTiles,
+            const Vector2U& tileSize,
+            const std::string& pathname,
+            const uint16_t* tiles);
+
+    /*
+     *  \fn render
+     *  \brief Renders the object to a graphics interface.
+     *
+     *  \param matrix The positional information about the object.
+     *  \param graphics The graphics interface to render to.
+     */
+    void render(const Matrix& matrix,
+                GraphicsInterface& graphics) override;
+
+    /*
+     *  \fn getSize
+     *  \brief Gets the overall size of the object when it is at its
+     *         default starting dimensions and rotation.
+     *
+     *  \return The size of the object.
+     */
+    Vector2U getSize() const override;
+
+private:
+    const Vector2U mNumTiles;
+    const Vector2U mTileSize;
+    sf::VertexArray mVertices;
+    sf::Texture mTexture;
+    sf::RenderStates mRenderState;
 };
 }
-
+}
 #endif
